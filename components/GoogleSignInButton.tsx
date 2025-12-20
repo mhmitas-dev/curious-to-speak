@@ -5,7 +5,7 @@ import { Button } from "./ui/button";
 
 const GoogleSignInButton = () => {
     return (
-        <Button onClick={signInWithGoogle} className='p-4 bg-blue-500'>SIGN IN</Button>
+        <Button onClick={signInWithGoogle}>SIGN IN</Button>
     )
 }
 

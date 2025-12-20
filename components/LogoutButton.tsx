@@ -2,8 +2,9 @@
 
 import { createClient } from "@/lib/supabase/client"
 import { Button } from "./ui/button"
+import { cn } from "@/lib/utils"
 
-const LogoutButton = () => {
+const LogoutButton = ({ className }: { className?: string }) => {
     async function handleLogout() {
         const supabase = createClient()
         await supabase.auth.signOut()
@@ -11,7 +12,7 @@ const LogoutButton = () => {
     }
 
     return (
-        <Button onClickCapture={handleLogout}>Logout</Button>
+        <Button className={cn(className)} onClickCapture={handleLogout}>Logout</Button>
     )
 }
 

@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import AuthButton from "../AuthButton";
 
 const Navbar = async () => {
@@ -9,9 +10,9 @@ const Navbar = async () => {
                     <button className='text-xl font-semibold'>Curious2Talk</button>
                 </div>
 
-                <div>
+                <Suspense fallback={<div>Loading...</div>}>
                     <AuthButton />
-                </div>
+                </Suspense>
             </div>
         </nav>
     );

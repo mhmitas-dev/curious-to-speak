@@ -1,10 +1,10 @@
-import AuthButton from "@/components/AuthButton";
-import { Suspense } from "react";
+import Options from "@/components/home-components/options";
 
 export default function Home() {
 
   return (
     <main>
+      <Options />
     </main>
   );
 }

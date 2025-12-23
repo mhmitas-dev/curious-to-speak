@@ -5,6 +5,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
+import { useState } from "react"
 
 interface Participant {
     id: string
@@ -23,98 +24,126 @@ interface StageSectionProps {
 }
 
 export function StageSection({ host, guests, currentUserRole }: StageSectionProps) {
-    const onStage = [host, ...guests]
+    // const onStage = [host, ...guests]
+    const onStage = [host, ...guests, ...guests, ...guests, ...guests, ...guests, ...guests, guests[0], ...guests, ...guests, guests[0]]
 
     return (
-        <div className="px-4 py-3">
-            <div className="mb-3 flex items-center justify-between">
-                <h2 className="text-sm font-medium text-muted-foreground">ON STAGE</h2>
-                <span className="text-xs text-muted-foreground">{onStage.length}/20</span>
-            </div>
-
-            <div className="flex gap-3 overflow-x-auto pb-2">
+        <div className="px-4 pb-3 pt-5">
+            <div className="flex flex-wrap items-center justify-center gap-3 pb-2">
                 {onStage.map((participant) => (
-                    <SpeakerCard key={participant.id} participant={participant} canManage={currentUserRole === "host"} />
+                    <SpeakerCard
+                        key={participant.id}
+                        participant={participant}
+                        canManage={currentUserRole === "host"}
+                    />
                 ))}
             </div>
         </div>
     )
 }
 
-function SpeakerCard({
+export function SpeakerCard({
     participant,
     canManage,
 }: {
     participant: Participant
     canManage: boolean
 }) {
+    const [isHovered, setIsHovered] = useState(false)
     const isSpeaking = participant.is_speaking
     const isMuted = participant.voice_state === "muted"
 
     return (
-        <div
-            className={cn(
-                "relative flex flex-col items-center gap-2 rounded-lg bg-secondary/50 p-3 transition-all min-w-[120px]",
-                isSpeaking && "ring-2 ring-primary ring-offset-2 ring-offset-background",
-            )}
-        >
-            {isSpeaking && <div className="absolute inset-0 rounded-lg bg-primary/10 animate-pulse" />}
-
-            <div className="relative">
-                <Avatar className="h-14 w-14">
-                    <AvatarImage src={participant.avatar_url || "/placeholder.svg"} alt={participant.full_name} />
-                    <AvatarFallback>{participant.full_name.charAt(0)}</AvatarFallback>
+        <div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
+            <div
+                className={cn(
+                    "relative size-24 overflow-hidden transition-all duration-300",
+                    isSpeaking && "shadow-lg shadow-primary/30",
+                )}
+            >
+                {/* Full-coverage Avatar - Removed rounded-full from Avatar to make it rectangular */}
+                <Avatar className="w-full h-full rounded-none">
+                    <AvatarImage
+                        src={`https://placehold.co/600x400/orange/white?text=${participant.full_name.charAt(0).toUpperCase()}`}
+                        alt={participant.full_name}
+                        className="object-cover"
+                    />
+                    <AvatarFallback className="bg-primary/10 text-primary font-semibold text-4xl">
+                        {participant.full_name.charAt(0).toUpperCase()}
+                    </AvatarFallback>
                 </Avatar>
+
+                <div className="absolute inset-0 bg-linear-to-b from-transparent via-transparent to-black/40" />
 
                 <div
                     className={cn(
-                        "absolute -bottom-1 -right-1 flex h-6 w-6 items-center justify-center rounded-full border-2 border-background",
-                        isMuted ? "bg-muted" : "bg-primary",
+                        "absolute inset-0 flex flex-col items-center justify-center gap-1 backdrop-blur-sm transition-opacity duration-300",
+                        isHovered ? "opacity-100 bg-black/50" : "opacity-0",
                     )}
                 >
-                    {isMuted ? (
-                        <MicOff className="h-3.5 w-3.5 text-muted-foreground" />
-                    ) : (
-                        <Mic className="h-3.5 w-3.5 text-primary-foreground" />
-                    )}
+                    <p className="text-sm font-semibold text-white text-center px-3">{participant.full_name}</p>
+                    <p className="text-xs text-white/80">@{participant.username}</p>
                 </div>
 
-                {isSpeaking && !isMuted && (
-                    <div className="absolute -right-2 top-0 flex items-center gap-0.5">
-                        <div className="h-2 w-0.5 animate-wave bg-primary rounded-full" />
-                        <div className="h-3 w-0.5 animate-wave bg-primary rounded-full delay-75" />
-                        <div className="h-2 w-0.5 animate-wave bg-primary rounded-full delay-150" />
+                {(participant.role === "host" || participant.role === "guest") && (
+                    <div className="absolute bottom-2 left-2">
+                        <span
+                            className={cn(
+                                "inline-flex rounded-full px-2 py-1 text-xs font-medium",
+                                participant.role === "host" ? "bg-primary text-white" : "bg-accent text-white",
+                            )}
+                        >
+                            {participant.role === "host" ? "Host" : "Guest"}
+                        </span>
                     </div>
                 )}
-            </div>
 
-            <div className="flex flex-col items-center text-center w-full">
-                <div className="flex items-center gap-1.5">
-                    <p className="text-sm font-medium text-foreground truncate max-w-[90px]">{participant.full_name}</p>
-                    {participant.role === "host" && (
-                        <span className="rounded bg-primary/20 px-1.5 py-0.5 text-xs font-medium text-primary">Host</span>
-                    )}
-                    {participant.role === "guest" && (
-                        <span className="rounded bg-accent/20 px-1.5 py-0.5 text-xs font-medium text-accent-foreground">Guest</span>
+                <div className="absolute bottom-2 right-2">
+                    {isMuted ? (
+                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-destructive/80">
+                            <MicOff className="h-4 w-4 text-white" />
+                        </div>
+                    ) : (
+                        <div className="flex items-center gap-0.5">
+                            <div className="h-1.5 w-0.5 animate-wave bg-primary rounded-full" />
+                            <div className="h-2.5 w-0.5 animate-wave bg-primary rounded-full animation-delay-75" />
+                            <div className="h-1.5 w-0.5 animate-wave bg-primary rounded-full animation-delay-150" />
+                        </div>
                     )}
                 </div>
-                <p className="text-xs text-muted-foreground truncate max-w-[100px]">@{participant.username}</p>
-            </div>
 
-            {canManage && participant.role !== "host" && (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon" className="h-6 w-6 absolute top-2 right-2">
-                            <MoreVertical className="h-3.5 w-3.5" />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent align="end">
-                        <DropdownMenuItem>{participant.voice_state === "muted" ? "Unmute" : "Mute"}</DropdownMenuItem>
-                        <DropdownMenuItem>Move to Audience</DropdownMenuItem>
-                        <DropdownMenuItem className="text-destructive">Remove</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )}
+                {canManage && participant.role !== "host" && (
+                    <div className="absolute top-2 right-2">
+                        <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" size="icon" className="h-8 w-8 bg-black/40 hover:bg-black/60 backdrop-blur-sm">
+                                    <MoreVertical className="h-4 w-4 text-white" />
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end" className="w-44">
+                                <DropdownMenuItem className="cursor-pointer">
+                                    {participant.voice_state === "muted" ? "Unmute" : "Mute"}
+                                </DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer">Move to Audience</DropdownMenuItem>
+                                <DropdownMenuItem className="cursor-pointer text-destructive focus:text-destructive">
+                                    Remove
+                                </DropdownMenuItem>
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+                )}
+
+                {isSpeaking && !isMuted && (
+                    <div className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
+                        <div className="h-1.5 w-0.5 animate-wave bg-primary rounded-full" />
+                        <div className="h-2.5 w-0.5 animate-wave bg-primary rounded-full animation-delay-75" />
+                        <div className="h-1.5 w-0.5 animate-wave bg-primary rounded-full animation-delay-150" />
+                    </div>
+                )}
+
+                {isSpeaking && <div className="absolute -inset-1 rounded-xl border border-primary/50 pointer-events-none" />}
+            </div>
         </div>
     )
 }
+

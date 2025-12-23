@@ -10,18 +10,18 @@ interface RoomHeaderProps {
 export function RoomHeader({ roomName, }: RoomHeaderProps) {
 
     return (
-        <header className="grid grid-cols-3 h-16 border-b border-border bg-card px-6">
+        <header className="grid gap-2 sm:grid-cols-3 py-2 sm:py-0 sm:h-16 border-b border-border bg-card px-6">
             <div className="flex gap-4">
-                <div className="flex items-center justify-start gap-3">
+                <div className="flex items-center sm:justify-start gap-3">
                     <h1 className="text-md font-semibold text-foreground">{roomName}</h1>
                 </div>
             </div>
-            <div className="flex items-center justify-center gap-2">
+            <div className="flex items-center sm:justify-center gap-2">
                 <Button disabled size="icon">
                     <MicOff className="size-5" />
                 </Button>
             </div>
-            <div className="flex items-center justify-end gap-2">
+            <div className="flex items-center sm:justify-end gap-2">
                 <Button variant="destructive" size="sm">
                     <LogOut className="size-4 mr-2" />
                     Leave Room

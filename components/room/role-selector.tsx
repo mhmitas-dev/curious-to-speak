@@ -9,7 +9,7 @@ interface RoleSelectorProps {
 
 export function RoleSelector({ currentRole, onRoleChange }: RoleSelectorProps) {
     return (
-        <div className="flex items-center gap-2 px-6 py-2 border-b border-border bg-card">
+        <div className="flex flex-col sm:flex-row items-center gap-2 px-6 py-2 border-b border-border bg-card">
             <span className="text-sm text-muted-foreground">Demo Role:</span>
             <Button
                 variant={currentRole === "host" ? "default" : "ghost"}

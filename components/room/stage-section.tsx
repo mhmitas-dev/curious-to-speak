@@ -21,14 +21,15 @@ interface StageSectionProps {
     host: Participant
     guests: Participant[]
     currentUserRole: "host" | "guest" | "audience"
+    participantBoxExpanded: boolean
 }
 
-export function StageSection({ host, guests, currentUserRole }: StageSectionProps) {
-    // const onStage = [host, ...guests]
-    const onStage = [host, ...guests, ...guests, ...guests, ...guests, ...guests, ...guests, guests[0], ...guests, ...guests, guests[0]]
+export function StageSection({ host, guests, currentUserRole, participantBoxExpanded }: StageSectionProps) {
+    const onStage = [host, ...guests]
+    // const onStage = [host, ...guests, ...guests, ...guests, ...guests, ...guests, ...guests, guests[0]]
 
     return (
-        <div className="px-4 pb-3 pt-5">
+        <div className={cn("px-4 pb-3 pt-5 overflow-y-scroll nice-scrollbar", participantBoxExpanded ? "max-h-64" : "max-h-6", "transition-[max-height] duration-300 ease-in")}>
             <div className="flex flex-wrap items-center justify-center gap-3 pb-2">
                 {onStage.map((participant) => (
                     <SpeakerCard
@@ -57,12 +58,11 @@ export function SpeakerCard({
         <div className="relative group" onMouseEnter={() => setIsHovered(true)} onMouseLeave={() => setIsHovered(false)}>
             <div
                 className={cn(
-                    "relative size-24 overflow-hidden transition-all duration-300",
-                    isSpeaking && "shadow-lg shadow-primary/30",
+                    "relative size-24 overflow-hidden transition-all duration-300  rounded-sm shadow-md shadow-primary/10",
                 )}
             >
                 {/* Full-coverage Avatar - Removed rounded-full from Avatar to make it rectangular */}
-                <Avatar className="w-full h-full rounded-none">
+                <Avatar className="w-full h-full rounded-sm">
                     <AvatarImage
                         src={`https://placehold.co/600x400/orange/white?text=${participant.full_name.charAt(0).toUpperCase()}`}
                         alt={participant.full_name}
@@ -81,11 +81,10 @@ export function SpeakerCard({
                         isHovered ? "opacity-100 bg-black/50" : "opacity-0",
                     )}
                 >
-                    <p className="text-sm font-semibold text-white text-center px-3">{participant.full_name}</p>
-                    <p className="text-xs text-white/80">@{participant.username}</p>
+                    <p className="text-sm font-semibold text-white text-center px-3 line-clamp-2">{participant.full_name}</p>
                 </div>
 
-                {(participant.role === "host" || participant.role === "guest") && (
+                {/* {(participant.role === "host" || participant.role === "guest") && (
                     <div className="absolute bottom-2 left-2">
                         <span
                             className={cn(
@@ -96,18 +95,16 @@ export function SpeakerCard({
                             {participant.role === "host" ? "Host" : "Guest"}
                         </span>
                     </div>
-                )}
+                )} */}
 
-                <div className="absolute bottom-2 right-2">
+                <div className="absolute bottom-0 right-0">
                     {isMuted ? (
-                        <div className="flex h-8 w-8 items-center justify-center rounded-full bg-destructive/80">
+                        <div className="flex h-7 w-7 items-center justify-center rounded-none rounded-tl-sm rounded-br-sm bg-black/70">
                             <MicOff className="h-4 w-4 text-white" />
                         </div>
                     ) : (
-                        <div className="flex items-center gap-0.5">
-                            <div className="h-1.5 w-0.5 animate-wave bg-primary rounded-full" />
-                            <div className="h-2.5 w-0.5 animate-wave bg-primary rounded-full animation-delay-75" />
-                            <div className="h-1.5 w-0.5 animate-wave bg-primary rounded-full animation-delay-150" />
+                        <div>
+                            {/* Speaking animation effect will be here */}
                         </div>
                     )}
                 </div>
@@ -133,7 +130,7 @@ export function SpeakerCard({
                     </div>
                 )}
 
-                {isSpeaking && !isMuted && (
+                {/* {isSpeaking && !isMuted && (
                     <div className="absolute left-2 top-1/2 -translate-y-1/2 flex items-center gap-0.5">
                         <div className="h-1.5 w-0.5 animate-wave bg-primary rounded-full" />
                         <div className="h-2.5 w-0.5 animate-wave bg-primary rounded-full animation-delay-75" />
@@ -141,7 +138,7 @@ export function SpeakerCard({
                     </div>
                 )}
 
-                {isSpeaking && <div className="absolute -inset-1 rounded-xl border border-primary/50 pointer-events-none" />}
+                {isSpeaking && <div className="absolute -inset-1 rounded-xl border border-primary/50 pointer-events-none" />} */}
             </div>
         </div>
     )

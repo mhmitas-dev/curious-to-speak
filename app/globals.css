@@ -152,4 +152,34 @@
     font-size: 16px;
     font-weight: bold;
   }
+
+  /* Nice custom scrollbar for containers that use overflow-auto */
+  .nice-scrollbar {
+    scrollbar-width: thin;
+    scrollbar-color: rgba(148, 163, 184, 0.6) transparent;
+  }
+
+  .nice-scrollbar::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+
+  .nice-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .nice-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(148, 163, 184, 0.6);
+    border-radius: 9999px;
+    border: 3px solid transparent;
+    background-clip: padding-box;
+  }
+
+  .nice-scrollbar::-webkit-scrollbar-thumb:hover {
+    background-color: rgba(148, 163, 184, 0.8);
+  }
+
+  .dark .nice-scrollbar::-webkit-scrollbar-thumb {
+    background-color: rgba(100, 116, 139, 0.6);
+  }
 }

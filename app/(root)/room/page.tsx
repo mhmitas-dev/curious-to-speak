@@ -90,7 +90,7 @@ const mockMessages = [
 
 export default function RoomPage() {
     const [currentUserRole, setCurrentUserRole] = useState<"host" | "guest" | "audience">("host")
-    const [participantBoxExpanded, setParticipantBoxExpanded] = useState(false)
+    const [participantBoxExpanded, setParticipantBoxExpanded] = useState(true)
 
     return (
         <div className="flex h-screen w-full">
@@ -102,7 +102,7 @@ export default function RoomPage() {
                 <div className="flex flex-1 overflow-hidden">
                     <div className="flex flex-1 flex-col overflow-hidden">
                         {/* Stage Content Area - takes most space */}
-                        <div className="flex flex-1 items-center justify-center bg-background/50 p-4">
+                        <div className="flex flex-1 items-center justify-center bg-background/50 p-4 overflow-y-hidden">
                             <div className="text-center">
                                 <div className="mb-4 rounded-lg border-2 border-dashed border-border bg-card/50 p-12">
                                     <p className="text-lg font-medium text-muted-foreground">Stage Content Area</p>
@@ -114,23 +114,26 @@ export default function RoomPage() {
                         </div>
 
                         {/* Stage Participants - bottom horizontal strip */}
-                        <div className="overflow-auto rounded-t-lg relative">
+                        <div className="rounded-t-lg relative">
                             {/* Centered Floating Button */}
                             <div className="flex justify-center w-full">
                                 <button
                                     onClick={() => setParticipantBoxExpanded(!participantBoxExpanded)}
                                     className="px-1 py-0.5 rounded-2xl w-28 flex justify-center items-center bg-card hover:bg-card hover:text-card-foreground dark:hover:bg-card/50 border-t border-b border-border cursor-pointer mb-1.5"
                                 >
-                                    <ChevronDown className={cn("size-5", participantBoxExpanded && "rotate-180 transition-all duration-300")} />
+                                    <ChevronDown className={cn("size-5", participantBoxExpanded || "rotate-180 transition-all duration-300")} />
                                 </button>
                             </div>
-                            <ScrollArea className={cn(participantBoxExpanded ? "h-6" : "h-64", "transition-height duration-300 bg-card border-t border-border")}>
+                            <div className="bg-card border-t border-border rounded-t-lg">
+                                {/* <ScrollArea className={cn(participantBoxExpanded ? "h-6" : "h-64", "transition-height duration-300 bg-card border-t border-border")}> */}
                                 <StageSection
                                     host={mockParticipants.host}
                                     guests={mockParticipants.guests}
                                     currentUserRole={currentUserRole}
+                                    participantBoxExpanded={participantBoxExpanded}
                                 />
-                            </ScrollArea>
+                                {/* </ScrollArea> */}
+                            </div>
                         </div>
                     </div>
                 </div>

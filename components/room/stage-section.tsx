@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
+import { useUserRole } from "@/lib/context/user-role-context"
 
 interface Participant {
     id: string
@@ -20,13 +21,13 @@ interface Participant {
 interface StageSectionProps {
     host: Participant
     guests: Participant[]
-    currentUserRole: "host" | "guest" | "audience"
     participantBoxExpanded: boolean
 }
 
-export function StageSection({ host, guests, currentUserRole, participantBoxExpanded }: StageSectionProps) {
+export function StageSection({ host, guests, participantBoxExpanded }: StageSectionProps) {
     const onStage = [host, ...guests]
     // const onStage = [host, ...guests, ...guests, ...guests, ...guests, ...guests, ...guests, guests[0]]
+    const { userRole: currentUserRole } = useUserRole()
 
     return (
         <div className={cn("px-4 pb-3 pt-5 overflow-y-scroll nice-scrollbar", participantBoxExpanded ? "max-h-64" : "max-h-6", "transition-[max-height] duration-300 ease-in")}>

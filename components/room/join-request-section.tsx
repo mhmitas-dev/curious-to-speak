@@ -8,7 +8,7 @@ import { useUserRole } from "@/lib/context/user-role-context"
 import { mockParticipants } from "@/lib/mock-data"
 import { SidebarContent, SidebarFooter, SidebarSeparator } from "../ui/sidebar"
 
-export function AudienceSection() {
+export function JoinRequestSection() {
     const { userRole: currentUserRole } = useUserRole()
     const isHost = currentUserRole === "host"
 

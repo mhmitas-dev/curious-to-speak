@@ -1,12 +1,20 @@
 "use client"
 
-import { useState } from "react"
-import { MessageSquare, Users, Settings, ChevronRightIcon, icons } from "lucide-react"
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs"
-import { ChatSection } from "@/components/room/chat-section"
-import { AudienceSection } from "@/components/room/audience-section"
-import { SettingsSection } from "@/components/room/settings-section"
+import * as React from "react"
+import { Sidebar, SidebarContent, SidebarHeader, SidebarRail, SidebarSeparator, useSidebar, } from "@/components/ui/sidebar"
+import { cn } from "@/lib/utils"
+import { Hand, LayoutGridIcon, MessageSquareIcon, Users, X } from "lucide-react"
 import { Button } from "../ui/button"
+import { ChatSection } from "./chat-section"
+import { AudienceSection } from "./audience-section"
+import { SettingsSection } from "./settings-section"
+import { useUserRole } from "@/lib/context/user-role-context"
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
+import { JoinRequestSection } from "./join-request-section"
 
 interface Message {
     id: string
@@ -23,49 +31,94 @@ interface AudienceMember {
     presence: "present" | "absent" | "removed"
 }
 
-interface RoomSidebarProps {
-    messages: Message[]
-    audience: AudienceMember[]
-    currentUserRole: "host" | "guest" | "audience"
-}
 
-export function RoomSidebar({ messages, audience, currentUserRole }: RoomSidebarProps) {
-    const [activeTab, setActiveTab] = useState("chat")
+export function RoomSidebar() {
+    const { state, setOpen } = useSidebar()
+    const isCollapsed = state === "collapsed";
+    const [currentTab, setCurrentTab] = React.useState<"chats" | "audiences" | "requests" | "applications">("chats");
+    const { userRole: currentUserRole } = useUserRole()
+    const tabButtons = [
+        { id: "chats", label: "Chats", icon: MessageSquareIcon },
+        { id: "audiences", label: "Audiences", icon: Users },
+        { id: "requests", label: "Requests", icon: Hand },
+        { id: "applications", label: "Applications", icon: LayoutGridIcon },
+    ];
+
+    const handleTabChange = (tab: "chats" | "audiences" | "requests" | "applications") => {
+        setCurrentTab(tab);
+    };
 
     return (
-        <div className="flex min-w-80 w-80 flex-col border-l border-border bg-card">
-            <Tabs value={activeTab} onValueChange={setActiveTab} className="flex h-full flex-col">
-                <div className="px-2 py-3 flex gap-2 items-center justify-between">
-                    <TabsList className="grid w-full grid-cols-3">
-                        <TabsTrigger value="chat" className="gap-2">
-                            <MessageSquare className="h-4 w-4" />
-                            ({messages.length})
-                        </TabsTrigger>
-                        <TabsTrigger value="audience" className="gap-2">
-                            <Users className="h-4 w-4" />
-                            ({audience.length})
-                        </TabsTrigger>
-                        <TabsTrigger value="settings" className="gap-2">
-                            <Settings className="h-4 w-4" />
-                        </TabsTrigger>
-                    </TabsList>
-                    <Button size={"icon"} variant={"ghost"}>
-                        <ChevronRightIcon className="size-6" />
-                    </Button>
+        <Sidebar collapsible="icon" side="right">
+            <SidebarHeader className="flex flex-row justify-between items-center">
+                <div
+                    className={cn(
+                        "flex py-2",
+                        isCollapsed
+                            ? "flex-col items-center gap-1.5"
+                            : "flex-row gap-3 justify-start"
+                    )}
+                >
+                    {tabButtons.map((tab, idx) => (
+                        <React.Fragment key={tab.id}>
+                            <Tooltip>
+                                <TooltipTrigger asChild>
+                                    <Button
+                                        variant={currentTab === tab.id ? "default" : "outline"}
+                                        size="icon"
+                                        onClick={() => {
+                                            handleTabChange(
+                                                tab.id as "chats" | "audiences" | "requests" | "applications"
+                                            )
+                                            if (isCollapsed) setOpen(true)
+                                        }}
+                                    >
+                                        <tab.icon className="size-5" />
+                                    </Button>
+                                </TooltipTrigger>
+                                <TooltipContent>
+                                    <p>{tab.label}</p>
+                                </TooltipContent>
+                            </Tooltip>
+
+                            {isCollapsed && idx < tabButtons.length - 1 && (
+                                <SidebarSeparator className="my-2" />
+                            )}
+                        </React.Fragment>
+                    ))}
                 </div>
 
-                <TabsContent value="chat" className="mt-0 flex-1 overflow-hidden">
-                    <ChatSection messages={messages} currentUserRole={currentUserRole} />
-                </TabsContent>
+                {!isCollapsed && (
+                    <Button
+                        onClick={() => setOpen(false)}
+                        variant="ghost"
+                        size="icon"
+                    >
+                        <X className="size-5" />
+                    </Button>
+                )}
+            </SidebarHeader>
 
-                <TabsContent value="audience" className="mt-0 flex-1 overflow-hidden">
-                    <AudienceSection audience={audience} currentUserRole={currentUserRole} />
-                </TabsContent>
-
-                <TabsContent value="settings" className="mt-0 flex-1 overflow-hidden">
-                    <SettingsSection />
-                </TabsContent>
-            </Tabs>
-        </div>
+            <SidebarSeparator className={cn(
+                isCollapsed && "hidden"
+            )} />
+            {/* Message Area */}
+            {!isCollapsed && currentTab === "chats" &&
+                <ChatSection />
+            }
+            {/* Audience Area */}
+            {!isCollapsed && currentTab === "audiences" &&
+                <AudienceSection />
+            }
+            {/* Requests Area */}
+            {!isCollapsed && currentTab === "requests" &&
+                <JoinRequestSection />
+            }
+            {/* Application Area */}
+            {!isCollapsed && currentTab === "applications" &&
+                <SettingsSection />
+            }
+            <SidebarRail />
+        </Sidebar >
     )
 }

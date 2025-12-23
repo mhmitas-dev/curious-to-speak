@@ -1,3 +1,5 @@
+import { RoomSidebar } from '@/components/room/room-sidebar';
+import { SidebarProvider } from '@/components/ui/sidebar';
 import React from 'react'
 
 const layout = ({
@@ -6,9 +8,12 @@ const layout = ({
     children: React.ReactNode;
 }>) => {
     return (
-        <div>
-            {children}
-        </div>
+        <SidebarProvider className="flex">
+            <main className="flex-1">
+                {children}
+            </main>
+            <RoomSidebar />
+        </SidebarProvider>
     )
 }
 

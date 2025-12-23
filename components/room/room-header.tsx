@@ -2,6 +2,7 @@
 
 import { LogOut, MicOff } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { SidebarTrigger } from "../ui/sidebar"
 
 interface RoomHeaderProps {
     roomName: string
@@ -22,7 +23,7 @@ export function RoomHeader({ roomName, }: RoomHeaderProps) {
                 </Button>
             </div>
             <div className="flex items-center sm:justify-end gap-2">
-                <Button variant="destructive" size="sm">
+                <Button variant="destructive" className="cursor-pointer" size="sm">
                     <LogOut className="size-4 mr-2" />
                     Leave Room
                 </Button>

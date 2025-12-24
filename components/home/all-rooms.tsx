@@ -6,7 +6,6 @@ const AllRooms = async () => {
 
     return (
         <div>
-            <p>{message}</p>
             <div className='grid grid-cols-2 gap-8'>
                 {rooms && rooms.length > 0 && rooms.map((room) => (
                     <SpeakingRoomCard

@@ -5,7 +5,7 @@ import { Suspense } from "react";
 export default function Home() {
 
   return (
-    <main className="custom-container">
+    <main className="custom-container space-y-10">
       <Options />
       <Suspense fallback={<p>Loading rooms...</p>}>
         <AllRooms />

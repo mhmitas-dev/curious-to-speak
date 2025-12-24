@@ -32,3 +32,15 @@ export function getAvatarInitials(name: string) {
   // Multiple words: first letter of first + first letter of last
   return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
 }
+
+/**
+ * @param min Minimum Number
+ * @param max Maximum Number
+ * @returns {number} Returns a random integer between min and max (inclusive).
+ */
+export function getRandomInt(min: number, max: number): number {
+  const minCeiled = Math.ceil(min);
+  const maxFloored = Math.floor(max);
+  // The maximum is inclusive and the minimum is inclusive
+  return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled;
+}

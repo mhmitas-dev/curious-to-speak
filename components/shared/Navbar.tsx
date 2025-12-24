@@ -5,7 +5,7 @@ import Image from "next/image";
 const Navbar = async () => {
 
     return (
-        <nav className="w-full border-b border-border bg-card/80 backdrop-blur z-10">
+        <nav className="w-full border-b border-border bg-card/80 backdrop-blur z-10 fixed top-0 inset-x-0">
             <div className="custom-container flex items-center justify-between">
                 <div className="">
                     <button className='text-xl font-semibold flex items-center gap-1'>

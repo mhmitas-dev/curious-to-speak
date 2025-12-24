@@ -17,8 +17,9 @@ const layout = async ({
     }
 
     return (
-        <div>
+        <div className=''>
             <Navbar />
+            <div className='h-16'></div>
             {children}
         </div>
     )

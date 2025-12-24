@@ -17,7 +17,7 @@ export default function RoomPage() {
         <div className="h-screen w-full">
             <div className="flex h-screen flex-col flex-1">
                 <RoomHeader roomName={mockRoom.name} />
-                <RoleSelector currentRole={currentUserRole} onRoleChange={setUserRole} />
+                {/* <RoleSelector currentRole={currentUserRole} onRoleChange={setUserRole} /> */}
                 {/* Main Content - Stage Area */}
                 <div className="flex flex-1 overflow-hidden">
                     <div className="flex flex-1 flex-col overflow-hidden">

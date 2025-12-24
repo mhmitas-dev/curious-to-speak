@@ -1,6 +1,6 @@
 import { RoomSidebar } from '@/components/room/room-sidebar';
 import { SidebarProvider } from '@/components/ui/sidebar';
-import React from 'react'
+import React, { Suspense } from 'react'
 
 const layout = ({
     children,
@@ -9,9 +9,11 @@ const layout = ({
 }>) => {
     return (
         <SidebarProvider className="flex">
-            <main className="flex-1">
-                {children}
-            </main>
+            <Suspense fallback={<div>Loading Sidebar...</div>}>
+                <main className="flex-1">
+                    {children}
+                </main>
+            </Suspense>
             <RoomSidebar />
         </SidebarProvider>
     )

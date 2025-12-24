@@ -1,15 +1,10 @@
-import { Button } from '../ui/button';
-import { Plus } from 'lucide-react';
+import { CreateRoomForm } from './create-room-form';
 
 const Options = () => {
-
     return (
-        <section className='custom-container'>
+        <section className=''>
             <div>
-                <Button>
-                    <span>Create a new Room</span>
-                    <Plus />
-                </Button>
+                <CreateRoomForm />
             </div>
         </section>
     )

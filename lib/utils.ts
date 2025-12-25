@@ -44,3 +44,10 @@ export function getRandomInt(min: number, max: number): number {
   // The maximum is inclusive and the minimum is inclusive
   return Math.floor(Math.random() * (maxFloored - minCeiled + 1)) + minCeiled;
 }
+
+/**
+ * A simple helper function to generate a random user identity.
+ */
+export function generateRandomUserId() {
+  return `test-identity-${String(Math.random() * 100_000).slice(0, 5)}` as const;
+}

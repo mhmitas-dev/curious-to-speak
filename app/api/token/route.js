@@ -1,24 +1,36 @@
 import { AccessToken } from 'livekit-server-sdk';
 import { NextResponse } from 'next/server';
 
-export async function GET(req) {
-    const room = req.nextUrl.searchParams.get('room');
-    const name = req.nextUrl.searchParams.get('name');
+export async function POST(req) {
+    const body = await req.json();
+    const { room_name, participant_name } = body; // ← Use underscores!
 
-    if (!room || !name) {
-        return NextResponse.json({ error: 'Missing room or name' }, { status: 400 });
+    console.log({ room_name, participant_name })
+
+    if (!room_name || !participant_name) {
+        return NextResponse.json({ error: 'Missing room_name or participant_name' }, { status: 400 });
     }
 
-    // 1. Create the token
     const at = new AccessToken(
         process.env.LIVEKIT_API_KEY,
         process.env.LIVEKIT_API_SECRET,
-        { identity: name }
+        { identity: participant_name }
     );
 
-    // 2. Give the user permission to join the room and speak
-    at.addGrant({ roomJoin: true, room: room, canPublish: true, canSubscribe: true });
+    at.addGrant({
+        roomJoin: true,
+        room: room_name,
+        canPublish: true,
+        canSubscribe: true
+    });
 
-    // 3. Return the token string
-    return NextResponse.json({ token: await at.toJwt() });
+    const token = await at.toJwt();
+
+    const response = {
+        participant_token: token,
+        server_url: process.env.LIVEKIT_URL
+    };
+    console.log('Returning:', response);
+
+    return NextResponse.json(response);
 }
